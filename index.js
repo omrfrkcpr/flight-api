@@ -76,7 +76,7 @@ app.all("/", (req, res) => {
 app.use(require("./src/routes/"));
 
 // static files serve
-app.use("/uploads", express.static("public"));
+app.use("/uploads", express.static("./uploads"));
 
 //* eşleşmeyen routeları yakalar
 app.use((req, res, next) => {
