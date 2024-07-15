@@ -33,6 +33,14 @@ module.exports = {
             #swagger.tags = ["Users"]
             #swagger.summary = "Create User"
         */
+
+    if (req.file) {
+      // console.log(req.file);
+      // if (req.file.mimetype === "image/jpeg") {
+      // }
+      req.body.avatar = "/uploads/" + req.file.filename;
+    }
+
     const data = await User.create(req.body);
 
     res.status(201).send({
@@ -56,9 +64,18 @@ module.exports = {
             #swagger.tags = ["Users"]
             #swagger.summary = "Update User"
         */
+
+    if (req.file) {
+      // console.log(req.file);
+      // if (req.file.mimetype === "image/jpeg") {
+      // }
+      req.body.avatar = "/uploads/" + req.file.filename;
+    }
     const data = await User.updateOne({ _id: req.params.id }, req.body, {
       runValidators: true,
     });
+
+    // delete old uploaded image
 
     res.status(202).send({
       error: false,
@@ -72,6 +89,9 @@ module.exports = {
             #swagger.summary = "Delete User"
         */
     const data = await User.deleteOne({ _id: req.params.id });
+
+    // delete old uploaded image
+
     res.status(data.deletedCount ? 204 : 404).send({
       error: !data.deletedCount,
       data,
