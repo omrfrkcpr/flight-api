@@ -1,21 +1,20 @@
-"use strict"
+"use strict";
 /* -------------------------------------------------------
-    NODEJS EXPRESS | CLARUSWAY FullStack Team
+    NODEJS EXPRESS | FLIGHT_API
 ------------------------------------------------------- */
-const router = require('express').Router()
+const router = require("express").Router();
 /* ------------------------------------------------------- */
 // ROUTER INDEX:
 
 // URL: /
 
 // auth:
-router.use('/auth', require('./auth'))
+router.use("/auth", require("./auth"));
 // user:
-router.use('/users', require('./user'))
-
+router.use("/users", require("./user"));
 
 // document:
-router.use('/documents', require('./documents'))
+router.use("/documents", require("./documents"));
 
 /* ------------------------------------------------------- */
-module.exports = router
+module.exports = router;

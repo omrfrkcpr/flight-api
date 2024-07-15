@@ -1,20 +1,21 @@
-"use strict"
+"use strict";
 /* -------------------------------------------------------
-    NODEJS EXPRESS | CLARUSWAY FullStack Team
+    NODEJS EXPRESS | FLIGHT_API
 ------------------------------------------------------- */
 // MongoDB Connection:
 
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 
-const dbConnection = function() {
-    // Connect:
-    mongoose.connect(process.env.MONGODB)
-        .then(() => console.log('* DB Connected * '))
-        .catch((err) => console.log('* DB Not Connected * ', err))
-}
+const dbConnection = function () {
+  // Connect:
+  mongoose
+    .connect(process.env.MONGODB)
+    .then(() => console.log("* DB Connected * "))
+    .catch((err) => console.log("* DB Not Connected * ", err));
+};
 
 /* ------------------------------------------------------- */
 module.exports = {
-    mongoose,
-    dbConnection
-} 
+  mongoose,
+  dbConnection,
+};

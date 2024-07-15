@@ -1,8 +1,8 @@
-"use strict"
+"use strict";
 /* -------------------------------------------------------
-    NODEJS EXPRESS | CLARUSWAY FullStack Team
+    NODEJS EXPRESS | FLIGHT_API
 ------------------------------------------------------- */
-const router = require('express').Router()
+const router = require("express").Router();
 /* ------------------------------------------------------- */
 
 const token = require("../controllers/token");
@@ -19,6 +19,5 @@ router
   .patch(token.update)
   .delete(token.delete);
 
-
 /* ------------------------------------------------------- */
-module.exports = router
+module.exports = router;

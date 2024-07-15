@@ -1,6 +1,6 @@
 "use strict";
 /* -------------------------------------------------------
-    NODEJS EXPRESS | CLARUSWAY FullStack Team
+    NODEJS EXPRESS | FLIGHT_API
 ------------------------------------------------------- */
 const { mongoose } = require("../configs/dbConnection");
 const passwordEncrypt = require("../helpers/passwordEncrypt");
@@ -18,7 +18,7 @@ const UserSchema = new mongoose.Schema(
       type: String,
       trim: true,
       required: true,
-      set: (password)=> passwordEncrypt(password)
+      set: (password) => passwordEncrypt(password),
     },
     email: {
       type: String,

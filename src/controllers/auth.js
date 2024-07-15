@@ -1,6 +1,6 @@
 "use strict";
 /* -------------------------------------------------------
-    NODEJS EXPRESS | CLARUSWAY FullStack Team
+    NODEJS EXPRESS | FLIGHT_API
 ------------------------------------------------------- */
 
 const User = require("../models/user");
@@ -124,7 +124,7 @@ module.exports = {
       } else {
         throw new CustomError("Refresh data is wrong!", 401);
       }
-    }else {
+    } else {
       throw new CustomError("Please enter refresh token!", 401);
     }
   },
@@ -145,13 +145,11 @@ module.exports = {
         deleted,
         message: deleted?.deletedCount > 0 ? "Logout Ok" : "Logout Failed",
       });
-    }else {
+    } else {
       res.send({
-        error:false,
-        message:"Logout Ok!"
-      })
+        error: false,
+        message: "Logout Ok!",
+      });
     }
-
-    
   },
 };

@@ -1,6 +1,6 @@
 "use strict";
 /* -------------------------------------------------------
-    NODEJS EXPRESS | CLARUSWAY FullStack Team
+    NODEJS EXPRESS | FLIGHT_API
 ------------------------------------------------------- */
 
 const User = require("../models/user");
@@ -56,9 +56,9 @@ module.exports = {
             #swagger.tags = ["Users"]
             #swagger.summary = "Update User"
         */
-     const data = await User.updateOne({ _id: req.params.id }, req.body, {
-       runValidators: true,
-     });
+    const data = await User.updateOne({ _id: req.params.id }, req.body, {
+      runValidators: true,
+    });
 
     res.status(202).send({
       error: false,

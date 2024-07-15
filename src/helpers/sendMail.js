@@ -1,11 +1,11 @@
 "use strict";
 /* -------------------------------------------------------
-    NODEJS EXPRESS | CLARUSWAY FullStack Team
+    NODEJS EXPRESS | FLIGHT_API
 ------------------------------------------------------- */
 
 const nodemailer = require("nodemailer");
 
-module.exports = function (to,subject,message){
+module.exports = function (to, subject, message) {
   //* GoogleMail (gmail)
   const transporter = nodemailer.createTransport({
     service: process.env.EMAIL_SERVICE,
@@ -22,4 +22,4 @@ module.exports = function (to,subject,message){
     },
     (error, success) => console.log(success, error)
   );
-}
+};
