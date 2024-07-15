@@ -21,11 +21,12 @@ module.exports = {
             `
         */
 
-    const data = await res.getModelList(Flight);
+    const data = await res.getModelList(Flight, {}, "createdId");
 
     res.status(200).send({
       error: false,
-      details: await res.getModeListDetails(Flight),
+      data,
+      details: await res.getModelListDetails(Flight),
     });
   },
   create: async (req, res) => {
