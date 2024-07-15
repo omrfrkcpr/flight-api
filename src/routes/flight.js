@@ -6,18 +6,25 @@ const router = require("express").Router();
 /* ------------------------------------------------------- */
 const flight = require("../controllers/flight");
 const idValidation = require("../middlewares/idValidation");
+const {
+  isLoginAndVerified,
+  isStaffOrAdmin,
+  isAdmin,
+} = require("../middlewares/permissions");
 
 //* /flights
 
-router.route("/").get(flight.list).post(flight.create);
+router.use(isLoginAndVerified);
+
+router.route("/").get(flight.list).post(isStaffOrAdmin, flight.create);
 
 router
   .route("/:id")
   .all(idValidation)
   .get(flight.read)
-  .put(flight.update)
-  .patch(flight.update)
-  .delete(flight.delete);
+  .put(isStaffOrAdmin, flight.update)
+  .patch(isStaffOrAdmin, flight.update)
+  .delete(isAdmin, flight.delete);
 
 /* ------------------------------------------------------- */
 module.exports = router;
