@@ -4,6 +4,7 @@
 ------------------------------------------------------- */
 
 const Reservation = require("../models/reservation");
+const { CustomError } = require("../errors/customError");
 
 module.exports = {
   list: async (req, res) => {
@@ -19,11 +20,19 @@ module.exports = {
                 </ul>
             `
         */
-    const data = await res.getModelList(Reservation, {}, "createdId");
+
+    let customFilter = {};
+
+    // only admin or staff can see all reservations. Other users can only see their reservations.
+    if (!req.user.isAdmin && !req.user.isStaff) {
+      customFilter = { createdId: req.user._id };
+    }
+
+    const data = await res.getModelList(Reservation, customFilter, "createdId");
 
     res.status(200).send({
       error: false,
-      details: await res.getModelListDetails(Reservation, {}, [
+      details: await res.getModelListDetails(Reservation, customFilter, [
         { path: "createdId", select: "-__v" },
         { path: "flightId", select: "-__v" },
       ]),
@@ -42,6 +51,16 @@ module.exports = {
     });
   },
   read: async (req, res) => {
+    if (!req.user.isAdmin && !req.user.isStaff) {
+      const checkData = await Reservation.findOne({ _id: req.params.id });
+      if (checkData.createdId?.toString() !== req.user._id.toString()) {
+        throw new CustomError(
+          "No Permission: Unauthorized to access this data",
+          403
+        );
+      }
+    }
+
     const data = await Reservation.findOne({ _id: req.params.id }).populate(
       "createdId"
     );
@@ -53,6 +72,17 @@ module.exports = {
   },
   update: async (req, res) => {
     req.body.createdId = req.user._id;
+
+    if (!req.user.isAdmin && !req.user.isStaff) {
+      const checkData = await Reservation.findOne({ _id: req.params.id });
+      if (checkData.createdId?.toString() !== req.user._id.toString()) {
+        throw new CustomError(
+          "No Permission: Unauthorized to access this data",
+          403
+        );
+      }
+    }
+
     const data = await Reservation.updateOne({ _id: req.params.id }, req.body, {
       runValidators: true,
     });
