@@ -4,6 +4,7 @@
 ------------------------------------------------------- */
 
 const User = require("../models/user");
+const fs = require("node:fs");
 
 module.exports = {
   list: async (req, res) => {
@@ -77,11 +78,17 @@ module.exports = {
       // }
       req.body.avatar = "/uploads/" + req.file.filename;
     }
-    const data = await User.updateOne({ _id: req.params.id }, req.body, {
+    // const data = await User.updateOne({ _id: req.params.id }, req.body, {
+    //   runValidators: true,
+    // }); // doesnt return data
+    const data = await User.findOneAndUpdate({ _id: req.params.id }, req.body, {
       runValidators: true,
-    });
+    }); // returns data
 
     // delete old uploaded image
+    if (req.file && data.avatar) {
+      fs.unlinkSync(`.${data.avatar}`, (err) => console.log(err));
+    }
 
     res.status(202).send({
       error: false,
@@ -94,9 +101,13 @@ module.exports = {
             #swagger.tags = ["Users"]
             #swagger.summary = "Delete User"
         */
-    const data = await User.deleteOne({ _id: req.params.id });
+    // const data = await User.deleteOne({ _id: req.params.id }); // doesnt return data
+    const data = await User.findOneAndDelete({ _id: req.params.id }); // returns data
 
     // delete old uploaded image
+    if (data.avatar) {
+      fs.unlinkSync(`.${data.avatar}`, (err) => console.log(err));
+    }
 
     res.status(data.deletedCount ? 204 : 404).send({
       error: !data.deletedCount,

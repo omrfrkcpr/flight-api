@@ -49,4 +49,20 @@ const FlightSchema = new mongoose.Schema(
   }
 );
 
+FlightSchema.pre("init", function (document) {
+  console.log(document);
+  // document.user = "omer";
+
+  document.departureDateStr = document.departureDate.toLocaleString("de-DE", {
+    dateStyle: "full",
+    timeStyle: "medium",
+  });
+  document.arrivalDateStr = document.arrivalDate.toLocaleString("de-DE", {
+    dateStyle: "full",
+    timeStyle: "medium",
+  });
+
+  document.__v = undefined;
+});
+
 module.exports = mongoose.model("Flight", FlightSchema);

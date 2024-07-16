@@ -6,6 +6,7 @@
 const Reservation = require("../models/reservation");
 const Passenger = require("../models/passenger");
 const { CustomError } = require("../errors/customError");
+const processPassenger = require("../helpers/processPassenger");
 
 module.exports = {
   list: async (req, res) => {
@@ -29,7 +30,11 @@ module.exports = {
       customFilter = { createdId: req.user._id };
     }
 
-    const data = await res.getModelList(Reservation, customFilter, "createdId");
+    const data = await res.getModelList(Reservation, customFilter, [
+      "passengers",
+      "createdId",
+      "flightId",
+    ]);
 
     res.status(200).send({
       error: false,
@@ -43,24 +48,13 @@ module.exports = {
   create: async (req, res) => {
     req.body.createdId = req.user._id;
 
-    let passengerInfos = req.body?.passengers || [],
-      passengerIds = [],
-      passenger = {};
+    const passengerIds = await processPassenger(
+      Passenger,
+      req.body?.passengers || [],
+      req.user._id
+    );
 
-    for (let passengerInfo of passengerInfos) {
-      if (typeof passengerInfo == "object") {
-        passenger = await Passenger.findOne({ email: passengerInfo.email }); // email unique for every passenger for our project. Normally it should be passId or idNumber
-        if (!passenger) {
-          Object.assign(passengerInfo, { createdId: req.user._id });
-          passenger = await Passenger.create(passengerInfo);
-        }
-      } else {
-        // id info as string value
-        passenger = await Passenger.findOne({ _id: passengerInfo }); // find passenger with id
-      }
-      if (passenger) passengerIds.push(passenger._id);
-    }
-
+    // console.log(passengerIds);
     req.body.passengers = passengerIds;
 
     const data = await Reservation.create(req.body);

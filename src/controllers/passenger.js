@@ -4,6 +4,7 @@
 ------------------------------------------------------- */
 
 const Passenger = require("../models/passenger");
+const { CustomError } = require("../errors/customError");
 
 module.exports = {
   list: async (req, res) => {

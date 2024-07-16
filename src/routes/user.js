@@ -23,8 +23,8 @@ router
   .route("/:id")
   .all(idValidation, isOwnOrAdmin)
   .get(user.read)
-  .put(user.update)
-  .patch(user.update)
+  .put(upload.single("avatar"), user.update)
+  .patch(upload.single("avatar"), user.update)
   .delete(user.delete);
 
 /* ------------------------------------------------------- */
