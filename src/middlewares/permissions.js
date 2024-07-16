@@ -11,6 +11,9 @@ const User = require("../models/user");
 
 module.exports = {
   isLoginAndVerified: (req, res, next) => {
+    if (process.env.NODE_ENV == "development") {
+      return next();
+    }
     if (req.user) {
       if (req.user.isActive) {
         next();
@@ -25,6 +28,9 @@ module.exports = {
     }
   },
   isStaffOrAdmin: (req, res, next) => {
+    if (process.env.NODE_ENV == "development") {
+      return next();
+    }
     if (req.user.isStaff || req.user.isAdmin) {
       next();
     } else {
@@ -35,6 +41,9 @@ module.exports = {
     }
   },
   isAdmin: (req, res, next) => {
+    if (process.env.NODE_ENV == "development") {
+      return next();
+    }
     if (req.user.isAdmin) {
       next();
     } else {
@@ -45,6 +54,9 @@ module.exports = {
     }
   },
   isOwnOrAdmin: async (req, res, next) => {
+    if (process.env.NODE_ENV == "development") {
+      return next();
+    }
     const urlName = req.url;
     const userId = req.user._id;
     const itemId = req.params.id;

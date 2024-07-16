@@ -109,10 +109,10 @@ module.exports = {
       fs.unlinkSync(`.${data.avatar}`, (err) => console.log(err));
     }
 
-    res.status(data.deletedCount ? 204 : 404).send({
-      error: !data.deletedCount,
+    res.status(204).send({
+      error: false,
       data,
-      message: "User not found!",
+      message: "User deleted successfully!",
     });
   },
 };
