@@ -19,11 +19,18 @@ module.exports = {
                 </ul>
             `
         */
-    const data = await res.getModelList(Passenger, {}, "createdId");
+
+    let customFilter = {};
+
+    if (!req.user.isAdmin && !req.user.isStaff) {
+      customFilter = { createdId: req.user._id };
+    }
+
+    const data = await res.getModelList(Passenger, customFilter, "createdId");
 
     res.status(200).send({
       error: false,
-      details: await res.getModelListDetails(Passenger),
+      details: await res.getModelListDetails(Passenger, customFilter),
       data,
     });
   },
@@ -39,6 +46,16 @@ module.exports = {
     });
   },
   read: async (req, res) => {
+    if (!req.user.isAdmin && !req.user.isStaff) {
+      const checkData = await Passenger.findOne({ _id: req.params.id });
+      if (checkData.createdId?.toString() != req.user._id.toString()) {
+        throw new CustomError(
+          "No Permission: Unauthorized to access this data",
+          403
+        );
+      }
+    }
+
     const data = await Passenger.findOne({ _id: req.params.id }).populate(
       "createdId"
     );

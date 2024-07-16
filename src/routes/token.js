@@ -7,8 +7,12 @@ const router = require("express").Router();
 
 const token = require("../controllers/token");
 const idValidation = require("../middlewares/idValidation");
+const { isLogin, isAdmin } = require("../middlewares/permissions");
 
 //* /tokens
+
+router.use(isLogin, isAdmin);
+
 router.route("/").get(token.list).post(token.create);
 
 router

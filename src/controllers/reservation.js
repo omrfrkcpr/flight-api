@@ -4,6 +4,7 @@
 ------------------------------------------------------- */
 
 const Reservation = require("../models/reservation");
+const Passenger = require("../models/passenger");
 const { CustomError } = require("../errors/customError");
 
 module.exports = {
@@ -42,6 +43,26 @@ module.exports = {
   create: async (req, res) => {
     req.body.createdId = req.user._id;
 
+    let passengerInfos = req.body?.passengers || [],
+      passengerIds = [],
+      passenger = {};
+
+    for (let passengerInfo of passengerInfos) {
+      if (typeof passengerInfo == "object") {
+        passenger = await Passenger.findOne({ email: passengerInfo.email }); // email unique for every passenger for our project. Normally it should be passId or idNumber
+        if (!passenger) {
+          Object.assign(passengerInfo, { createdId: req.user._id });
+          passenger = await Passenger.create(passengerInfo);
+        }
+      } else {
+        // id info as string value
+        passenger = await Passenger.findOne({ _id: passengerInfo }); // find passenger with id
+      }
+      if (passenger) passengerIds.push(passenger._id);
+    }
+
+    req.body.passengers = passengerIds;
+
     const data = await Reservation.create(req.body);
 
     res.status(201).send({
@@ -53,7 +74,7 @@ module.exports = {
   read: async (req, res) => {
     if (!req.user.isAdmin && !req.user.isStaff) {
       const checkData = await Reservation.findOne({ _id: req.params.id });
-      if (checkData.createdId?.toString() !== req.user._id.toString()) {
+      if (checkData.createdId?.toString() != req.user._id.toString()) {
         throw new CustomError(
           "No Permission: Unauthorized to access this data",
           403
@@ -75,7 +96,7 @@ module.exports = {
 
     if (!req.user.isAdmin && !req.user.isStaff) {
       const checkData = await Reservation.findOne({ _id: req.params.id });
-      if (checkData.createdId?.toString() !== req.user._id.toString()) {
+      if (checkData.createdId?.toString() != req.user._id.toString()) {
         throw new CustomError(
           "No Permission: Unauthorized to access this data",
           403

@@ -65,6 +65,12 @@ module.exports = {
             #swagger.summary = "Update User"
         */
 
+    if (!req.user.isAdmin) {
+      delete req.body.isAdmin;
+      delete req.body.isStaff;
+      delete req.body.isActive;
+    }
+
     if (req.file) {
       // console.log(req.file);
       // if (req.file.mimetype === "image/jpeg") {
